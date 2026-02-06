@@ -4,7 +4,7 @@ from threading import Thread
 run = True
 
 def listenConnection():
-    bind_ip = input("Enter IP Address of client: ")
+    bind_ip = input("Enter IP Address of this server: ")
     
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind((bind_ip, 8000))
@@ -30,12 +30,15 @@ def receiveMsg(conn):
     conn.close()
 
 if __name__ == '__main__':
+    print("run 'ipconfig' (windows) or 'ip a' (linux) for IP address of machine.\n\n")
+    print("Hi! Im Server :)\n\n")
+        
     conn, addr, s = listenConnection()
     rcv = Thread(target=receiveMsg, args=(conn, ))
     rcv.start()
 
-    while run:                                          # Moved listening code to main thread
-        try:                                            # Copied from client.py
+    while run:
+        try:
             msg = input("Type Message: ")
             conn.sendall(msg.encode())
         except socket.error:

