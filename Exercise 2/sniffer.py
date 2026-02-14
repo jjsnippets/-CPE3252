@@ -122,15 +122,15 @@ def open_socket():
             # if destination_addr == attacker_ip:
             #     continue
             
-            # msg = (
-            #     f"Source MAC Address     : {src_mac}\n"
-            #     f"Destination MAC Address: {dest_mac}\n"
-            #     f"IP Protocol            : {protocol_dict[protocol]}\n"
-            #     f"Source IP Address      : {source_addr}\n"
-            #     f"Destination IP Address : {destination_addr}\n"
-            #     f"{protocol_dict[protocol]} Data length         : {data_length}\n"
-            #     f"Data Sniffed           : {rcv_Data}\n\n"
-            # )
+            msg = (
+                f"Source MAC Address     : {src_mac}\n"
+                f"Destination MAC Address: {dest_mac}\n"
+                f"IP Protocol            : {protocol_dict[protocol]}\n"
+                f"Source IP Address      : {source_addr}\n"
+                f"Destination IP Address : {destination_addr}\n"
+                f"{protocol_dict[protocol]} Data length         : {data_length}\n"
+                f"Data Sniffed           : {rcv_Data}\n\n"
+            )
             
             print(msg)
             
